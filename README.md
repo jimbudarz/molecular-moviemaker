@@ -3,11 +3,6 @@ Scripts and functions for processing LCLS data using MATLAB to make Molecular Mo
 
 ## The schema of the data analysis is as follows:
 
-** Function calls are specified for 'b0114' and may be slightly different for other experiments.
-
-** The comments below don't include masks, with the logic that they don't truly alter data, just exclude some unreliable data.
-
-
 ### LargeRun
 IS CALLED BY: none
 CALLS: GetExpFina, fetch_timepoints, rdCSPADTS, goodshotsonly, getXRayWavelength, generatePedestal, image2rad, AnalysisFunc, universalmaskmaker
