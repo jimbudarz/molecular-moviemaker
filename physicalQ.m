@@ -1,14 +1,15 @@
 function [l,q,qerr,di,avg_angle,distances] = physicalQ(experiment,radii,D,L)
-%Uses detector geometry to convert physical space to q space.
-%[l,q,qerr] = physicalQ(radii,D)
+%Uses detector geometry to convert physical space to q-space.
 %
-%   radii: radial distances from center of detector [um]
-%   D    : distance from front of Be window to face of detector [um]
-%   l    : path length seen by detector [um]
-%   q    : position in q-space
-%   qerr : error in q; s = q +/- qerr
-%   di   : effective distance to detector [um] : distance from center of
-%          the scattering region to the detector's face
+%   experiment : The proposal number for the experiment (e.g. 'L560','560','l560','56012')
+%        radii : radial distances from center of detector [um]
+%            D : distance from front of Be window to face of detector [um]
+%            l : path length seen by detector [um]
+%            q : position in q-space
+%         qerr : error in q; s = q +/- qerr
+%           di : effective distance to detector [um] : distance from center of the scattering region to the detector's face
+%    avg_angle : 
+%    distances :
 %
 % Revised last: Early October, 2012, JMB
 % Converted to a function: 2013.01.11, VCS
@@ -22,7 +23,7 @@ c = 2.99792458*10^18; %given in angstrom per second
 %High limits
 upstream_200u_aperture = [-179.48,.1];
 downstream_200u_aperture = [-179.65,.1];
-if strcmp(experiment,'L560');
+if strcmp(experiment,'L560')
     flange_drill_hole = [-189.84,3.175]; % 3.175mm for bore hole.
 else
     flange_drill_hole = [-189.84,(3.175/2)]; % 3.175/2mm for bore hole if washer is jammed in.
