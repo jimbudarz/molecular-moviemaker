@@ -1,24 +1,13 @@
 function [I_q,I_q_adu,I_phi] = constructIq(image,image_adu,qMap,oMap,qSort,phiSort,polSorts,phiMap,lMap,diMap,twothetaMap,attenuators,Area,radii,q,phivalues) %bms, changed input/output
 % Lowest level function that converts pixel map to I(q), the intensity as a function of q.
 %
-%       image : array of photons or counts
-%   image_adu :
-%        qMap :
-%       oMap  : array of subtended angles per pixel
-%       qSort :
-%     phiSort :
-%    polSorts :
-%      phiMap :
-%      pixMap : cellarray of arrays of indicies of pixels
-%       lMap  : array of exposed path lengths
-%       diMap :
-% twothetaMap :
-% Attenuators :
-%        Area :
-%       radii :
-%           q :
-%   phivalues :
-% Intensities : an array of intensities at each q value
+%   image : array of photons or counts
+% image_adu :
+% qMap
+%   oMap  : array of subtended angles per pixel
+%   pixMap: cellarray of arrays of indicies of pixels
+%   lMap  : array of exposed path lengths
+%   Intensities : an array of intensities at each q value
 
 % flatten image, angle map, and length map
 iFlat = image(:);

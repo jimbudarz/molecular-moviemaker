@@ -2,7 +2,7 @@ function [binned_img,binnedN,binnedIPM,photon_img,sum_img,N_shots_out,in_struc]=
 %Applies gain and common mode corrections and filters, and then creates a
 %photon map.
 
-%% Rename appropriate variables
+%% Rename appropriate variables to leave originals unchanged
 currentshots=in_struc.currentshots;
 currentstep=in_struc.step;
 isXRayon=in_struc.isXRayon;

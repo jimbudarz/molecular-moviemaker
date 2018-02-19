@@ -1,7 +1,6 @@
-% function [I_q,q,qerr_byq,qSort,I_phi,phivalues,pctExcitation,angleMap,phiMap] = radialAverage(experiment,runnum,images,L,D,x0,y0,dq,dphi,coors,A,goodPixels)
-function [I_q,I_q_adu,q,qerr_byq,qSort,I_phi,phivalues,pctExcitation,angleMap,phiMap] = radialAverage(experiment,runnum,images,images_adu,L,D,x0,y0,dq,dphi,coors,A,goodPixels) %bms, changed input/output
-
-%Constructs a weighted radial average of an image in q-space.
+function [I_q,I_q_adu,q,qerr_byq,qSort,I_phi,phivalues,pctExcitation,angleMap,phiMap] = radialAverage(experiment,runnum,images,images_adu,L,D,x0,y0,dq,dphi,coors,A,goodPixels)
+% Constructs a weighted radial average of an image in q-space.
+% 
 %           image :  array of photons or counts
 %               L :  wavelength (in nm)
 %               D :  distance from the Be window to the face of the detector
@@ -9,18 +8,9 @@ function [I_q,I_q_adu,q,qerr_byq,qSort,I_phi,phivalues,pctExcitation,angleMap,ph
 %              dq :  width of q bands
 %           coors :  array of pixel centers
 %               A :  array of pixel areas
-%         goodPixels :  an array of 1s & 0s indicating which pixels "count"
+%      goodPixels :  an array of 1s & 0s indicating which pixels "count"
 %         distMap :  for each pixel, the distance the scattering point is
 %                    from the laser focus
-
-% We don't use these forms b/c they don't take the physical locations of
-% the pixels into account.
-
-% qMap: array of pixel positions in q-space
-% qMap = genQ(coors, L, D, x0, y0);
-
-% oMap: array of subtended angles per pixel
-% oMap = genAngle( coors, A, D, x0, y0 );
 
 %% This section uses James' 'physicalQ' to find physically grounded values for path-length, lMap, position in q-space, q, and error in q, qerr.
 MapRadii= @(x,y) sqrt(x.^2+y.^2);

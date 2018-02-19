@@ -1,6 +1,16 @@
 function [binned_img,binnedN,binnedIPM,photon_img,N_shots_out,count_sums,binnedcounttot,currentRealTime_sec]=photon_map_hybrid(df,in_struc)
-%Uses a hybrid photon counting method (minimum ADU threshold) and then bins
-%data according to time tool.
+% Uses a hybrid photon counting method (minimum ADU threshold) and then bins
+% data according to time tool.
+%
+%                  df : 
+%          binned_img : 
+%             binnedN : 
+%           binnedIPM : 
+%          photon_img : 
+%         N_shots_out : 
+%          count_sums : 
+%      binnedcounttot : 
+% currentRealTime_sec : 
 
 %% Initial Parameters
 currentRealTime_sec=in_struc.currentRealTime_sec;

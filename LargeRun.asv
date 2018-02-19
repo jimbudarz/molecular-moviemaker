@@ -4,12 +4,12 @@ function [I_allsteps_good_unbinned,q,photonimg_good_unbinned_avg,photonimg_noUV_
 % function of time with all necessary calibrations and adjustments: I(q,t) 
 %
 %    experiment : The proposal number for the experiment (e.g. 'L560','560','l560','56012')
-%        runnum : The run (a.k.a. scan) number(s) to be loaded and processed 
+%        runnum : The run (a.k.a. scan) number to be loaded and processed 
 %   timebins_fs : An array of the desired timebins to produce from the timepoints in the scan (uses time-tool to correct UV/Xray jitter) 
 %       N_shots : The number of shots to load. Defaults to all available.
 %         steps : The number of timepoints to load. Defaults to all available.
 %
-%      I_allsteps_good_unbinned : I(q,t), Intensity for laser-on shots
+%      I_allsteps_good_unbinned : I(q,t), Intensity for laser-on shots (fordiagnostics)
 %                             q : Array of momentum-transfer vector values corresponding to I(q,t)
 %   photonimg_good_unbinned_avg : Average image for all laser-on frames
 %   photonimg_noUV_unbinned_avg : Average image for all laser-off frames
@@ -32,7 +32,7 @@ in_struc.count_sums_all=[];in_struc.ipm_sums_all=[];countsums_good_unbinned=[];c
 %% Set any experiment-specific variables:
 switch experiment
     case {'L560','560','l560','56012'}
-        experiment='56012';hutch='xpp';
+        experiment='56012'; hutch='xpp';
         in_struc.min_count = 110*ones([388 185 32 shots_per_loop]);
         STDlimit=3;
         fina=GetExpFina(hutch,experiment,runnum);
@@ -49,7 +49,7 @@ switch experiment
         timebins_sec = (1e-15).*[-20000:1000:5000];
         
     case {'i0613','xppi0613'}
-        experiment='i0613';hutch='xpp';
+        experiment='i0613'; hutch='xpp';
         fina=GetExpFina(hutch,experiment,runnum);
         plottingqmin=.75; plottingqmax=3.65; % For plotting, set the boundaries we expect to be accurate.
         load('i0613_darkstats');
@@ -57,7 +57,6 @@ switch experiment
         in_struc.min_count = 2*allsigmas; in_struc.min_count=repmat(in_struc.min_count,[1,1,1,shots_per_loop]);
         D=35972; x0 = 94370; y0 = 92520; % Measured distance between detector and beryllium window holder.
         load('i0613_masks.mat'); in_struc.pedestal=repmat(pedestal,[1,1,1,shots_per_loop]); % Loads masks of bad pixels and pedestal.
-%         load('gain_corr_L560.mat');in_struc.gain_corr = repmat(gain_corr,[1,1,1,shots_per_loop]);clear gain_corr;
         in_struc.isphotoncounting=.5; % .5 refers to the hybrid photon counting method that only relies on a lower limit for "hits".
         in_struc.hotmask=hotmask;in_struc.noisemask=noisemask_strict;
         goodPixels=pedestalmask.*noisemask_lax.*hotmask.*deadmask; in_struc.goodPixels=goodPixels; in_struc.repGoodPixels = repmat(in_struc.goodPixels,[1,1,1,shots_per_loop]);
@@ -65,16 +64,9 @@ switch experiment
             in_struc.count_sum_low_limit=3e7;
             in_struc.count_sum_high_limit=5e7;
             timebins_sec = (1e-15).*[-10200;-10100;-10000;-9900;-9800;-5200;-5100;-5000;-4900;-4800;-2200;-2100;-2000;-1900;-1800;-500;-400;-300;-200;-100;0;100;200;300;400;500;1800;1900;2000;2100;2200;4800;4900;5000;5100;5200;9800;9900;10000;10100;10200];
-%             timebins_sec = (1e-15).*[-10000;-5000;-2000;-300;0;300;2000;5000;10000];
         elseif ismember(runnum,[225:257,267:325])
             in_struc.count_sum_low_limit=1.5e7;
             in_struc.count_sum_high_limit=2.5e7;
-%             in_struc.count_sum_low_limit=1e7;
-%             in_struc.count_sum_high_limit=3e7;
-%             in_struc.count_sum_low_limit=2e7;
-%             in_struc.count_sum_high_limit=3e7;
-%             timebins_sec = (1e-15).*[-10000;-5000;-2500;-1000;-800;-600;-500;-400;-300;-200;-100;0;100;200;300;400;500;600;700;800;900;1000;1500;2000;3000;5000;10000];
-%             timebins_sec = (1e-15).*[-10000;-5000;-2500;-1000;-800;-600;-400;-200;0;200;400;600;800;1000;1500;2000;3000;5000;10000];
             timebins_sec = (1e-15).*[-2000:100:2000];
         elseif ismember(runnum,210)
             in_struc.count_sum_low_limit=1.3e7;
@@ -87,14 +79,12 @@ switch experiment
         fina=GetExpFina(hutch,experiment,runnum);
         if runnum<258
             D=38770;
-%             D=46000;
         elseif runnum>257
             D=38200;
-%             D=46000;
         end        
         x0 = 95020; y0 = 92670; % Distance between detector and beryllium window holder and calculated image centers (not cspad center)
         plottingqmin=1.0; plottingqmax=4.2; % For plotting, set the boundaries we expect to be accurate.
-        STDlimit=3; %tempdq=.02;
+        STDlimit=3;
         load('b0114darkmasks.mat'); in_struc.min_count = repmat(2*allsigmas,[1 1 1 shots_per_loop]); in_struc.sigma=allsigmas;
         in_struc.isphotoncounting=.5;
         goodPixels=noisemask.*pedestalmask;in_struc.goodPixels=goodPixels;in_struc.repGoodPixels=repmat(in_struc.goodPixels,[1,1,1,shots_per_loop]);
@@ -143,20 +133,12 @@ darksearch=0;
 %% Parse shots into lists of only the desirable ones:
 
 stepstoignore=zeros([length(totalnumsteps) 1]);
-parfor steploop=1:totalnumsteps;
-    % Fetch goodshots, darkshots, etc.
-%     try
-        [goodshots{steploop},darkshots{steploop},noUVshots{steploop},IPMandTTdata{steploop}] = goodshotsonly(hutch,experiment,runnum,steploop,N_shots); % Parses the list of all shots into different types of shots.
-%     catch
-%         disp(['Skipping step ',num2str(steploop),' for goodshotsonly error.']);
-%         stepstoignore(steploop)=1;
-%         continue
-%     end
-
+parfor steploop=1:totalnumsteps
+    [goodshots{steploop},darkshots{steploop},noUVshots{steploop},IPMandTTdata{steploop}] = goodshotsonly(hutch,experiment,runnum,steploop,N_shots); % Parses the list of all shots into different types of shots.
 end
 
 % If there's no dark shots in this run, look for some in other runs.
-while isempty(darkshots{1});
+while isempty(darkshots{1})
     darksearch=darksearch+1;disp(['Checking run ',num2str(runnum+darksearch),' for darks.'])
     in_struc.darkfina=GetExpFina(hutch,experiment,runnum+darksearch);
     parfor steploop=1:totalnumsteps
@@ -174,7 +156,7 @@ end
 
 %% Fetch X-Ray wavelength for precise calculation of q:
 Wavelength=zeros([1 length(steps)]);
-for steploop=steps;
+for steploop=steps
     try
         [Wavelength(steploop),~] = getXRayWavelength(fina,steploop); % (Assigns lambda in nm.)
         disp(['X-Ray recorded as ' num2str(1.23984187/Wavelength(steploop)) ' keV.']);
