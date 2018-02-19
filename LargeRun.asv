@@ -9,7 +9,7 @@ function [I_allsteps_good_unbinned,q,photonimg_good_unbinned_avg,photonimg_noUV_
 %       N_shots : The number of shots to load. Defaults to all available.
 %         steps : The number of timepoints to load. Defaults to all available.
 %
-%      I_allsteps_good_unbinned : I(q,t), Intensity for laser-on shots (fordiagnostics)
+%      I_allsteps_good_unbinned : I(q,t), Intensity for laser-on shots
 %                             q : Array of momentum-transfer vector values corresponding to I(q,t)
 %   photonimg_good_unbinned_avg : Average image for all laser-on frames
 %   photonimg_noUV_unbinned_avg : Average image for all laser-off frames
